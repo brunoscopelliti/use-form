@@ -9,6 +9,6 @@
     { "type": "perf", "hidden": true },
     { "type": "test", "hidden": true }
   ],
-  "commitUrlFormat": "https://github.com/brunoscopelliti/template-react-component/commits/{{hash}}",
-  "compareUrlFormat": "https://github.com/brunoscopelliti/template-react-component/compare/{{previousTag}}...{{currentTag}}"
+  "commitUrlFormat": "https://github.com/brunoscopelliti/@bscop/use-form/commits/{{hash}}",
+  "compareUrlFormat": "https://github.com/brunoscopelliti/@bscop/use-form/compare/{{previousTag}}...{{currentTag}}"
 }
