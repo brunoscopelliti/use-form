@@ -1,25 +1,90 @@
-import React from "react";
-import PropTypes from "prop-types";
+import { useState } from "react";
+
+import useBool from "@bscop/use-bool";
+
+const hasOwn = {}.hasOwnProperty;
 
 /**
- * @name Message
- * @component
- * @example
- * const label = "Hello, world!";
- * return (
- *   <Message label={label} />
- * );
+ * @name serialize
+ * @param {*} formState
+ * @returns {Record<string, import("./index").FieldValue>}
  */
-function Message (props) {
-  return (
-    <div className="label">
-      {props.label}
-    </div>
-  );
-}
+const serialize =
+  (formState) => {
+    /**
+     * @type Record<string, import("./index").FieldValue>
+     */
+    const serializedState = {};
+    for (const k in formState) {
+      if (hasOwn.call(formState, k)) {
+        serializedState[k] = formState[k].value;
+      }
+    }
+    return serializedState;
+  };
 
-Message.propTypes = {
-  label: PropTypes.string.isRequired,
-};
+/**
+ * @name useForm
+ * @param {import("./index").FormConfig} formConfig
+ */
+const useForm =
+  (formConfig) => {
+    const [formState, setFormState] = useState(formConfig);
 
-export default Message;
+    const [pending, reqStart, reqEnd] = useBool();
+
+    const onBlur =
+      (event) => {
+        // TODO
+      };
+
+    const onChange =
+      (event) => {
+        // TODO
+      };
+
+    /**
+     * @name getFieldAttributes
+     * @param {string} name
+     * @returns {import("./index").FieldAttributes}
+     */
+    const getFieldAttributes =
+      (name) => {
+        return {
+          name,
+          onBlur,
+          onChange,
+        };
+      };
+
+    /**
+     * @name onSubmit
+     * @param {import("./index").RequestSender} send
+     * @returns {import("./index").SubmitHandler}
+     */
+    const onSubmit =
+      (send) => {
+        const onSubmit_ =
+          (event) => {
+            event.preventDefault();
+
+            const payload = serialize(formState);
+
+            // TODO validation;
+
+            reqStart();
+
+            send(payload).finally(reqEnd);
+          };
+
+        return onSubmit_;
+      };
+
+    return {
+      getFieldAttributes,
+      onSubmit,
+      pending,
+    };
+  };
+
+export default useForm;

@@ -8,12 +8,11 @@
   "scripts": {
     "badge:coverage": "npm run test:coverage && codecov",
     "prebuild": "rm -rf ./package/dist",
-    "build": "npm run build:css && npm run build:js",
-    "build:css": "node-sass package/src/style.scss package/dist/style.css",
+    "build": "npm run build:js",
     "build:js": "rollup -c rollup.config.js",
     "build:storybook-style": "node-sass package/stories/storybook.scss package/stories/storybook.css",
     "build:storybook": "npm run build:storybook-style && build-storybook -o docs",
-    "dev": "npm run build:css -- --watch | npm run build:js -- --watch | npm run test:unit -- --watch",
+    "dev": "npm run build:js -- --watch | npm run test:unit -- --watch",
     "lint": "eslint 'package/**'",
     "prepare": "husky install",
     "prepublishOnly": "npm run build",
@@ -34,7 +33,6 @@
   "files": [
     "package/dist",
     "package/src/index.d.ts",
-    "package/src/style.scss",
     "CHANGELOG.md",
     "LICENSE",
     "README.md"
@@ -89,5 +87,8 @@
     "prop-types": "^15.7.2",
     "react": ">=17.0.0",
     "react-dom": ">=17.0.0"
+  },
+  "dependencies": {
+    "@bscop/use-bool": "^1.0.1"
   }
 }
