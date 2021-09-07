@@ -18,6 +18,7 @@ module.exports = {
     "<rootDir>/package/src",
   ],
   setupFiles: [
+    "<rootDir>/config/setup-jest.js",
   ],
   setupFilesAfterEnv: [
     "<rootDir>/config/jest.js",
