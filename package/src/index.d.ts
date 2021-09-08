@@ -3,9 +3,12 @@ import React from "react";
 export type FieldElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
 
 export type FieldAttributes = {
+  checked ?: boolean;
   name : string;
   onBlur : (event : React.FocusEvent) => void;
   onChange : (event : React.ChangeEvent) => void;
+  type : string;
+  value : string;
 };
 
 export type Rule = {
@@ -34,7 +37,7 @@ export type SubmitHandler = (event : React.FormEvent) => void;
 export type HookResult = {
   debug: () => void;
   errors: null | Record<keyof FormConfig, string>;
-  getFieldAttributes : (name : string) => FieldAttributes;
+  getFieldAttributes : (name : string, attrs ?: Record<string, string>) => FieldAttributes;
   pending : boolean;
   onSubmit : (send : RequestSender) => SubmitHandler;
 };

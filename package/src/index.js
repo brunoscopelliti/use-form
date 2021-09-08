@@ -135,14 +135,31 @@ const useForm =
     /**
      * @name getFieldAttributes
      * @param {string} name
+     * @param {Record<string, string>} [attrs]
      * @returns {import("./index").FieldAttributes}
      */
     const getFieldAttributes =
-      (name) => {
+      (name, attrs = {}) => {
+        if (attrs.type === "radio" || attrs.type === "checkbox") {
+          if (!attrs.value) {
+            throw new Error(`Value is mandatory for radio, and checkbox. Missing value for input named ${name}.`);
+          }
+        }
+
         return {
+          ...attrs,
+          // checked, todo: only when type is radio, or checkbox
           name,
           onBlur,
           onChange,
+          type: attrs.type || "text",
+          /**
+           * `attrs.value` must be set for radio, and checkbox.
+           * `formState[name].value` may be of type `string[]`
+           * only for type radio, and checkbox.
+           * So it's safe to assign value as we do below.
+           * @ts-ignore */
+          value: attrs.value || formState[name].value || "",
         };
       };
 
