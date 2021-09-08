@@ -39,6 +39,45 @@ const useForm =
 
     /**
      * @private
+     * @name setError
+     * @param {string} name
+     * @param {string} error
+     * @returns {void}
+     */
+    const setError =
+      (name, error) => {
+        setFormErrors(
+          formErrors == null
+            ? { [name]: error }
+            : { ...formErrors, [name]: error }
+        );
+      };
+
+    /**
+     * @private
+     * @name removeError
+     * @param {string} name
+     * @returns {void}
+     */
+    const removeError =
+      (name) => {
+        if (formErrors == null) {
+          return;
+        }
+
+        const { [name]: _, ...errors } = formErrors;
+
+        const isValid = Object.keys(errors).length === 0;
+
+        setFormErrors(
+          isValid === false
+            ? errors
+            : null
+        );
+      };
+
+    /**
+     * @private
      * @name setFieldValue
      * @param {string} name
      * @param {import("./index").FieldValue} value
@@ -63,8 +102,19 @@ const useForm =
      */
     const onBlur =
       (event) => {
-        // TODO
-        // const error = validate(k, formState[k], payload);
+        /**
+         * TODO: Handle radio, checkbox
+         */
+
+        const name = event.target.name;
+
+        const error = validate(name, formState[name], serialize(formState));
+
+        if (error) {
+          setError(name, error);
+        } else {
+          removeError(name);
+        }
       };
 
     /**

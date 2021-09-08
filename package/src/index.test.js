@@ -37,6 +37,14 @@ describe("useForm", () => {
                 <div data-testid="username-error" className="field-error">{errors.username}</div>
             }
           </div>
+          <div className="form-group">
+            <label>
+              I use this input field only to have something
+              reliable I can programatically `.focus()`, so that
+              blur event is triggered on the field under test.
+              <input type="text" data-testid="focusme" />
+            </label>
+          </div>
           <div className="form-buttons">
             <button disabled={Boolean(errors || pending)}>
               Send
@@ -119,5 +127,50 @@ describe("useForm", () => {
     expect(error).toHaveTextContent("The field is mandatory.");
 
     expect(spySubmit).not.toHaveBeenCalled();
+  });
+
+  it("validates field after it loses focus", async () => {
+    const spySubmit = jest.fn().mockImplementation(() => Promise.resolve());
+
+    render(<SimpleForm onSubmit={spySubmit} />);
+
+    const input = screen.getByTestId("username");
+
+    // @ts-ignore
+    expect(input.value).toBe("");
+
+    userEvent.type(input, "luffy");
+
+    // @ts-ignore
+    expect(input.value).toBe("luffy");
+
+    expect(screen.queryByTestId("username-error")).not.toBeInTheDocument();
+
+    userEvent.clear(input);
+
+    // @ts-ignore
+    expect(input.value).toBe("");
+
+    const otherInput = screen.getByTestId("focusme");
+
+    otherInput.focus();
+
+    const error = screen.getByTestId("username-error");
+
+    expect(error).toBeInTheDocument();
+    expect(error).toHaveTextContent("The field is mandatory.");
+
+    const submitButton = screen.getByRole("button");
+
+    expect(submitButton).toHaveAttribute("disabled", "");
+
+    userEvent.type(input, "luffy");
+
+    // @ts-ignore
+    expect(input.value).toBe("luffy");
+
+    otherInput.focus();
+
+    expect(screen.queryByTestId("username-error")).not.toBeInTheDocument();
   });
 });
