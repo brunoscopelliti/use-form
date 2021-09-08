@@ -5,6 +5,7 @@ const runMaybe =
   (handler) => {
     /**
      * @name validateMaybe
+     * @param {string} name
      * @param {string} label
      * @param {import("../index").FieldValue} value
      * @param {import("../index").Rule} rule
@@ -12,13 +13,13 @@ const runMaybe =
      * @returns {undefined|string}
      */
     const validateMaybe =
-      (label, value, rule, formState) => {
+      (name, label, value, rule, formState) => {
         let shouldRun = true;
         if (typeof rule.condition == "function") {
           shouldRun = rule.condition(formState);
         }
         if (shouldRun) {
-          return handler(label, value, rule, formState);
+          return handler(name, label, value, rule, formState);
         }
       };
 

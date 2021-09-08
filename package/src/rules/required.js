@@ -2,6 +2,7 @@ import runMaybe from "./maybe";
 
 /**
  * @name required
+ * @param {string} name
  * @param {string} label
  * @param {import("../index").FieldValue} value
  * @param {import("../index").Rule} rule
@@ -9,7 +10,7 @@ import runMaybe from "./maybe";
  * @returns {undefined|string}
  */
 const required =
-  (label, value, rule, formState) => {
+  (name, label, value, rule, formState) => {
     /**
      * TODO: what if value is array (eg. checkbox).
      */
@@ -20,7 +21,7 @@ const required =
       }
     }
 
-    return "The field is mandatory.";
+    return rule.message || `Field ${label} is mandatory.`;
   };
 
 export default runMaybe(required);

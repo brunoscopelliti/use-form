@@ -18,7 +18,7 @@ const validate =
         ? rule.validate
         : getRule(rule.id);
 
-      const result = checkFn(field.label, field.value, rule, formState);
+      const result = checkFn(name, field.label, field.value, rule, formState);
 
       if (result) {
         return result;

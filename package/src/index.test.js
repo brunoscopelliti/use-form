@@ -124,7 +124,7 @@ describe("useForm", () => {
     error = screen.queryByTestId("username-error");
 
     expect(error).toBeInTheDocument();
-    expect(error).toHaveTextContent("The field is mandatory.");
+    expect(error).toHaveTextContent("Field Username is mandatory.");
 
     expect(spySubmit).not.toHaveBeenCalled();
   });
@@ -158,7 +158,7 @@ describe("useForm", () => {
     const error = screen.getByTestId("username-error");
 
     expect(error).toBeInTheDocument();
-    expect(error).toHaveTextContent("The field is mandatory.");
+    expect(error).toHaveTextContent("Field Username is mandatory.");
 
     const submitButton = screen.getByRole("button");
 
@@ -172,5 +172,7 @@ describe("useForm", () => {
     otherInput.focus();
 
     expect(screen.queryByTestId("username-error")).not.toBeInTheDocument();
+
+    expect(submitButton).not.toHaveAttribute("disabled", "");
   });
 });
