@@ -12,8 +12,17 @@ body {
 
 input[type="text"],
 input[type="password"],
-input[type="email"] {
+input[type="email"],
+select {
+  box-sizing: border-box;
   display: block;
+  padding: 2px 5px;
+  width: 180px;
+}
+
+.form-group label {
+  cursor: pointer;
+}
 }
 
 .form-group .field-error {

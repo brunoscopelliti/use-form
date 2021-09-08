@@ -29,6 +29,8 @@
 * [ ] The content of the form changes dinamically depending on the 
       user's interaction with the form itself.
 
+* [ ] Same field name can be either readonly input or select.
+
 * [ ] Reset button
 
 
