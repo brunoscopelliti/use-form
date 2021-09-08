@@ -204,7 +204,15 @@ const useForm =
         return onSubmit_;
       };
 
+    const debug =
+      () => {
+        console.log("--- form state");
+        console.log(JSON.stringify(serialize(formState), null, 2));
+        console.log("---");
+      };
+
     return {
+      debug,
       errors: formErrors,
       getFieldAttributes,
       onSubmit,

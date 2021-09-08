@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import useForm from "../src";
 
 import delay from "./fixtures/delay";
 
 const Form = () => {
-  const { errors, getFieldAttributes, pending, onSubmit } = useForm(
+  const { debug, errors, getFieldAttributes, pending, onSubmit } = useForm(
     {
       username: {
         label: "Username",
@@ -17,6 +17,8 @@ const Form = () => {
       },
     }
   );
+
+  useEffect(debug);
 
   return (
     <form
@@ -31,6 +33,9 @@ const Form = () => {
         )
       }
     >
+      <div className="form-title">
+        Fill the form
+      </div>
       <div className="form-group">
         <label>
           Username:

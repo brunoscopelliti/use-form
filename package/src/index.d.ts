@@ -32,6 +32,7 @@ export type RequestSender = (payload: FormPayload) => Promise<unknown>;
 export type SubmitHandler = (event : React.FormEvent) => void;
 
 export type HookResult = {
+  debug: () => void;
   errors: null | Record<keyof FormConfig, string>;
   getFieldAttributes : (name : string) => FieldAttributes;
   pending : boolean;
