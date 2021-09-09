@@ -26,6 +26,26 @@ const serialize =
   };
 
 /**
+ * @name logFormat
+ * @param {*} formState
+ * @param {null|Record<string, string>} errors
+ * @returns {string}
+ */
+const logFormat =
+  (formState, errors) => {
+    const serializedState = {};
+    for (const k in formState) {
+      if (hasOwn.call(formState, k)) {
+        serializedState[k] = { value: formState[k].value };
+        if (errors?.[k]) {
+          serializedState[k].error = errors?.[k];
+        }
+      }
+    }
+    return JSON.stringify(serializedState, null, 2);
+  };
+
+/**
  * @name useForm
  * @param {import("./index").FormConfig} formConfig
  */
@@ -34,6 +54,26 @@ const useForm =
     const [pending, reqStart, reqEnd] = useBool();
 
     const [formState, setFormState] = useState(formConfig);
+
+    /**
+     * @private
+     * @name setFieldValue
+     * @param {string} name
+     * @param {import("./index").FieldValue} value
+     * @return {void}
+     */
+    const setFieldValue =
+      (name, value) => {
+        setFormState(
+          {
+            ...formState,
+            [name]: {
+              ...formState[name],
+              value: value,
+            },
+          }
+        );
+      };
 
     const [formErrors, setFormErrors] = useState(null);
 
@@ -73,26 +113,6 @@ const useForm =
           isValid === false
             ? errors
             : null
-        );
-      };
-
-    /**
-     * @private
-     * @name setFieldValue
-     * @param {string} name
-     * @param {import("./index").FieldValue} value
-     * @return {void}
-     */
-    const setFieldValue =
-      (name, value) => {
-        setFormState(
-          {
-            ...formState,
-            [name]: {
-              ...formState[name],
-              value: value,
-            },
-          }
         );
       };
 
@@ -224,7 +244,7 @@ const useForm =
     const debug =
       () => {
         console.log("--- form state");
-        console.log(JSON.stringify(serialize(formState), null, 2));
+        console.log(logFormat(formState, formErrors));
         console.log("---");
       };
 
