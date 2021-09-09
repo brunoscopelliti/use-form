@@ -181,6 +181,8 @@ describe("useForm", () => {
       expect(submitButton).not.toHaveAttribute("disabled", "");
     });
 
+    it.todo("validates field with inline rule");
+
     it.todo("reset form");
   });
 
@@ -248,9 +250,6 @@ describe("useForm", () => {
 
       return (
         <form onSubmit={onSubmit(props.onSubmit)}>
-          <div className="form-title">
-            Fill the form
-          </div>
           <div className="form-group">
             <p className="comment">
               Choosing one of the options below
@@ -365,6 +364,176 @@ describe("useForm", () => {
 
       expect(spySubmit).toHaveBeenCalledTimes(1);
       expect(spySubmit).toHaveBeenCalledWith({ phone: "123456", type: "token" });
+    });
+  });
+
+  describe("checkbox", () => {
+    const CheckboxForm = (props) => {
+      const { errors, register, pending, onSubmit } = useForm(
+        {
+          sports: {
+            label: "Sports",
+            schema: [
+              {
+                id: "required",
+                message: "Choosing at least a sport is mandatory.",
+              },
+            ],
+            ...(
+              props.values
+                ? {
+                    value: props.values,
+                  }
+                : null
+            ),
+          },
+        }
+      );
+
+      return (
+        <form onSubmit={onSubmit(props.onSubmit)}>
+          <div className="form-group">
+            <legend>
+              Selects all the sports you like:
+            </legend>
+            <div className="checkbox-group">
+              <label>
+                <input {...register("sports", { type: "checkbox", value: "soccer" })} />
+                Soccer
+              </label>
+              <label>
+                <input {...register("sports", { type: "checkbox", value: "basket" })} />
+                Basketball
+              </label>
+              <label>
+                <input {...register("sports", { type: "checkbox", value: "volley" })} />
+                Volley
+              </label>
+            </div>
+            {
+              errors?.sports &&
+                <div data-testid="error" className="field-error">{errors.sports}</div>
+            }
+          </div>
+          <div className="form-buttons">
+            <button disabled={Boolean(errors || pending)}>
+              Send
+            </button>
+          </div>
+        </form>
+      );
+    };
+
+    CheckboxForm.propTypes = {
+      onSubmit: PropTypes.func.isRequired,
+      values: PropTypes.array,
+    };
+
+    it("submits list of values", async () => {
+      const spySubmit = jest.fn().mockImplementation(() => Promise.resolve());
+
+      render(<CheckboxForm onSubmit={spySubmit} />);
+
+      const checkboxes = screen.getAllByRole("checkbox");
+
+      expect(checkboxes).toHaveLength(3);
+
+      for (const cb of checkboxes) {
+        // @ts-ignore
+        expect(cb.checked).toBe(false);
+      }
+
+      userEvent.click(checkboxes[2]);
+
+      // @ts-ignore
+      expect(checkboxes[2].checked).toBe(true);
+
+      userEvent.click(checkboxes[1]);
+
+      // @ts-ignore
+      expect(checkboxes[1].checked).toBe(true);
+
+      const submitButton = screen.getByRole("button");
+
+      await act(
+        async () => {
+          userEvent.click(submitButton);
+        }
+      );
+
+      expect(spySubmit).toHaveBeenCalledTimes(1);
+      expect(spySubmit).toHaveBeenCalledWith({ sports: ["volley", "basket"] });
+      spySubmit.mockClear();
+
+      userEvent.click(checkboxes[0]);
+      userEvent.click(checkboxes[1]);
+      userEvent.click(checkboxes[2]);
+
+      await act(
+        async () => {
+          userEvent.click(submitButton);
+        }
+      );
+
+      expect(spySubmit).toHaveBeenCalledTimes(1);
+      expect(spySubmit).toHaveBeenCalledWith({ sports: ["soccer"] });
+      spySubmit.mockClear();
+
+      userEvent.click(checkboxes[0]);
+
+      await act(
+        async () => {
+          userEvent.click(submitButton);
+        }
+      );
+
+      expect(spySubmit).not.toHaveBeenCalled();
+
+      expect(screen.getByTestId("error"))
+        .toHaveTextContent("Choosing at least a sport is mandatory.");
+
+      userEvent.click(checkboxes[0]);
+      userEvent.click(checkboxes[2]);
+      userEvent.click(checkboxes[1]);
+
+      await act(
+        async () => {
+          userEvent.click(submitButton);
+        }
+      );
+
+      expect(screen.queryByTestId("error")).not.toBeInTheDocument();
+
+      expect(spySubmit).toHaveBeenCalledTimes(1);
+      expect(spySubmit).toHaveBeenCalledWith({ sports: ["soccer", "volley", "basket"] });
+    });
+
+    it("submits default values", async () => {
+      const spySubmit = jest.fn().mockImplementation(() => Promise.resolve());
+
+      render(<CheckboxForm onSubmit={spySubmit} values={["soccer"]} />);
+
+      const checkboxes = screen.getAllByRole("checkbox");
+
+      expect(checkboxes).toHaveLength(3);
+
+      // @ts-ignore
+      expect(checkboxes[0].checked).toBe(true);
+      // @ts-ignore
+      expect(checkboxes[1].checked).toBe(false);
+      // @ts-ignore
+      expect(checkboxes[2].checked).toBe(false);
+
+      const submitButton = screen.getByRole("button");
+
+      await act(
+        async () => {
+          userEvent.click(submitButton);
+        }
+      );
+
+      expect(spySubmit).toHaveBeenCalledTimes(1);
+      expect(spySubmit).toHaveBeenCalledWith({ sports: ["soccer"] });
     });
   });
 });

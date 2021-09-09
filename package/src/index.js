@@ -113,7 +113,6 @@ const useForm =
                  * TODO:
                  * This might need to change to better accomodate
                  * checkbox (cause those can have more than one value).
-                 * ... or also consider default value (if/when implemented).
                  */
                 value: "",
               },
@@ -185,10 +184,6 @@ const useForm =
      */
     const onBlur =
       (event) => {
-        /**
-         * TODO: Handle radio, checkbox
-         */
-
         const name = event.target.name;
 
         const error = validate(name, formState[name], serialize(formState));
@@ -201,6 +196,38 @@ const useForm =
       };
 
     /**
+     * @private
+     * @name toggleValue
+     * @param {string} name
+     * @param {string} value
+     * @returns {string[]}
+     */
+    const toggleValue =
+      (name, value) => {
+        /**
+         * In this particular case,
+         * it's safe to assume `formState[name].value` is always `string[]`,
+         * and so it is `values`.
+         * @type string[]
+         * @ts-ignore */
+        const values = formState[name].value || [];
+
+        const at = values.findIndex(
+          (el) => {
+            return el === value;
+          }
+        );
+
+        if (at < 0) {
+          return values.concat(value);
+        }
+
+        const nextValues = values.slice();
+        nextValues.splice(at, 1);
+        return nextValues;
+      };
+
+    /**
      * @todo
      * @public
      * @name onChange
@@ -209,12 +236,23 @@ const useForm =
     const onChange =
       (event) => {
         const input = event.target;
+        const { name, type } = input;
 
         /**
-         * TODO: Handle radio, checkbox
+         * @type {import("./index").FieldValue}
          */
+        let value = input.value;
 
-        setFieldValue(input.name, input.value);
+        if (type === "checkbox") {
+          /**
+           * TODO
+           * <select multiple /> might need something similar (or the same).
+           */
+
+          value = toggleValue(name, value);
+        }
+
+        setFieldValue(name, value);
       };
 
     /**
@@ -226,7 +264,8 @@ const useForm =
      */
     const register =
       (name, attrs = {}) => {
-        if (attrs.type === "radio" || attrs.type === "checkbox") {
+        const checkable = attrs.type === "radio" || attrs.type === "checkbox";
+        if (checkable) {
           if (!attrs.value) {
             throw new Error(`Value is mandatory for radio, and checkbox. Missing value for input named ${name}.`);
           }
@@ -234,18 +273,17 @@ const useForm =
 
         return {
           ...attrs,
-          // checked, todo: only when type is radio, or checkbox
+          ...(
+            checkable
+              ? {
+                  checked: (formState[name].value || []).includes(attrs.value),
+                }
+              : null
+          ),
           name,
           onBlur,
           onChange,
           type: attrs.type || "text",
-          /**
-           * TODO:
-           * Add possibility to have default value;
-           * Default value is different than initial value.
-           * Default value is the value the input gets
-           * when user clear its content.
-           */
           /**
            * `attrs.value` must be set for radio, and checkbox.
            * `formState[name].value` may be of type `string[]`

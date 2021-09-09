@@ -40,6 +40,13 @@ input[type="radio"] {
   cursor: pointer;
 }
 
+.form-group .checkbox-group {
+  label {
+    display: flex;
+    align-items: baseline;
+  }
+}
+
 .form-group .radio-group {
   display: flex;
 

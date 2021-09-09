@@ -11,16 +11,19 @@ import runMaybe from "./maybe";
  */
 const required =
   (name, label, value, rule, formState) => {
-    /**
-     * TODO: what if value is array (eg. checkbox).
-     */
-
     if (typeof value == "string") {
       if (value && value.trim() !== "") {
         return undefined;
       }
     }
 
+    if (value?.length > 0) {
+      return undefined;
+    }
+
+    /**
+     * Is it possible to move somewhere else?
+     */
     return rule.message || `Field ${label} is mandatory.`;
   };
 
