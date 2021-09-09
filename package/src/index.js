@@ -94,18 +94,33 @@ const useForm =
       };
 
     /**
+     * Remove the error,
+     * from one, or many fields.
      * @private
      * @name removeError
-     * @param {string} name
+     * @param {string|string[]} names
      * @returns {void}
      */
     const removeError =
-      (name) => {
+      (names) => {
         if (formErrors == null) {
           return;
         }
 
-        const { [name]: _, ...errors } = formErrors;
+        if (typeof names == "string") {
+          return removeError([names]);
+        }
+
+        const errors = {};
+        for (const k in formErrors) {
+          if (hasOwn.call(formErrors, k)) {
+            if (names.includes(k)) {
+              continue;
+            }
+
+            errors[k] = formErrors[k];
+          }
+        }
 
         const isValid = Object.keys(errors).length === 0;
 
