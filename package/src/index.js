@@ -18,8 +18,16 @@ const serialize =
      */
     const serializedState = {};
     for (const k in formState) {
+      /* istanbul ignore else */
       if (hasOwn.call(formState, k)) {
-        serializedState[k] = formState[k].value;
+        /**
+         * We include in the payload only
+         * the fields which contain a not empty value.
+         */
+        const value = formState[k].value;
+        if (value?.length > 0) {
+          serializedState[k] = value;
+        }
       }
     }
     return serializedState;
@@ -31,10 +39,12 @@ const serialize =
  * @param {null|Record<string, string>} errors
  * @returns {string}
  */
+/* istanbul ignore next */
 const logFormat =
   (formState, errors) => {
     const serializedState = {};
     for (const k in formState) {
+      /* istanbul ignore else */
       if (hasOwn.call(formState, k)) {
         serializedState[k] = { value: formState[k].value };
         if (errors?.[k]) {
@@ -90,19 +100,25 @@ const useForm =
         let nextState = { ...formState };
 
         for (const name of names) {
-          nextState = {
-            ...nextState,
-            [name]: {
-              ...nextState[name],
-              /**
-               * TODO:
-               * This might need to change to better accomodate
-               * checkbox (cause those can have more than one value).
-               * ... or also consider default value (if/when implemented).
-               */
-              value: "",
-            },
-          };
+          /**
+           * It makes sense to reset only
+           * fields that contains an actual value.
+           */
+          if (nextState[name].value) {
+            nextState = {
+              ...nextState,
+              [name]: {
+                ...nextState[name],
+                /**
+                 * TODO:
+                 * This might need to change to better accomodate
+                 * checkbox (cause those can have more than one value).
+                 * ... or also consider default value (if/when implemented).
+                 */
+                value: "",
+              },
+            };
+          }
         }
 
         setFormState(nextState);
@@ -142,6 +158,7 @@ const useForm =
 
         const errors = {};
         for (const k in formErrors) {
+          /* istanbul ignore else */
           if (hasOwn.call(formErrors, k)) {
             if (names.includes(k)) {
               continue;
@@ -283,6 +300,7 @@ const useForm =
         const errors = {};
 
         for (const k in formState) {
+          /* istanbul ignore else */
           if (hasOwn.call(formState, k)) {
             const error = validate(k, formState[k], payload);
 
@@ -346,6 +364,7 @@ const useForm =
      * @public
      * @name debug
      */
+    /* istanbul ignore next */
     const debug =
       () => {
         console.log("--- form state");

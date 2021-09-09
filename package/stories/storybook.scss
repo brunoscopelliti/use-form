@@ -5,6 +5,12 @@ body {
   line-height: 24px;
 }
 
+.comment {
+  font-size: 14px;
+  font-style: italic;
+  margin: 0;
+}
+
 .form-title {
   font-size: 18px;
   margin: 0 0 10px;
@@ -20,9 +26,29 @@ select {
   width: 180px;
 }
 
+input[type="checkbox"],
+input[type="radio"] {
+  margin: 0;
+  margin-right: 4px;
+}
+
+.form-group + .form-group {
+  margin: 20px 0 0;
+}
+
 .form-group label {
   cursor: pointer;
 }
+
+.form-group .radio-group {
+  display: flex;
+
+  label {
+    display: flex;
+    align-items: baseline;
+    margin: 0;
+    margin-right: 16px;
+  }
 }
 
 .form-group .field-error {
