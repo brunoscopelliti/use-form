@@ -37,9 +37,12 @@ export type SubmitHandler = (event : React.FormEvent) => void;
 export type HookResult = {
   debug: () => void;
   errors: null | Record<keyof FormConfig, string>;
-  getFieldAttributes : (name : string, attrs ?: Record<string, string>) => FieldAttributes;
+  getFieldValue: (name : string) => FieldValue;
   pending : boolean;
   onSubmit : (send : RequestSender) => SubmitHandler;
+  register : (name : string, attrs ?: Record<string, string>) => FieldAttributes;
+  reset : () => void;
+  unregister : (name : string | string[]) => void;
 };
 
 declare const useForm : (formConfig : FormConfig) => HookResult;

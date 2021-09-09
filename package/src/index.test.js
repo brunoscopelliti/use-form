@@ -8,7 +8,7 @@ import useForm from "./";
 describe("useForm", () => {
   const SimpleForm =
     (props) => {
-      const { errors, getFieldAttributes, pending, onSubmit } = useForm(
+      const { errors, register, pending, onSubmit } = useForm(
         {
           username: {
             label: "Username",
@@ -29,7 +29,7 @@ describe("useForm", () => {
               <input
                 data-testid="username"
                 type="text"
-                {...getFieldAttributes("username")}
+                {...register("username")}
               />
             </label>
             {

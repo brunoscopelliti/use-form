@@ -5,7 +5,7 @@ import useForm from "../src";
 import delay from "./fixtures/delay";
 
 const Form = () => {
-  const { debug, errors, getFieldAttributes, pending, onSubmit } = useForm(
+  const { debug, errors, register, pending, onSubmit } = useForm(
     {
       name: {
         label: "Name",
@@ -40,7 +40,7 @@ const Form = () => {
       <div className="form-group">
         <label>
           Name:
-          <input {...getFieldAttributes("name")} />
+          <input {...register("name")} />
         </label>
         {
           errors?.name &&

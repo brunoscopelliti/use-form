@@ -75,6 +75,39 @@ const useForm =
         );
       };
 
+    /**
+     * @todo Complete implementation.
+     * @private
+     * @name resetFieldsValue
+     * @param {string[]} names
+     * @returns {void}
+     */
+    const resetFieldsValue =
+      (names) => {
+        /**
+         * @type {import("./index").FormConfig}
+         */
+        let nextState = { ...formState };
+
+        for (const name of names) {
+          nextState = {
+            ...nextState,
+            [name]: {
+              ...nextState[name],
+              /**
+               * TODO:
+               * This might need to change to better accomodate
+               * checkbox (cause those can have more than one value).
+               * ... or also consider default value (if/when implemented).
+               */
+              value: "",
+            },
+          };
+        }
+
+        setFormState(nextState);
+      };
+
     const [formErrors, setFormErrors] = useState(null);
 
     /**
@@ -97,18 +130,14 @@ const useForm =
      * Remove the error,
      * from one, or many fields.
      * @private
-     * @name removeError
-     * @param {string|string[]} names
+     * @name resetErrors
+     * @param {string[]} names
      * @returns {void}
      */
-    const removeError =
+    const resetErrors =
       (names) => {
         if (formErrors == null) {
           return;
-        }
-
-        if (typeof names == "string") {
-          return removeError([names]);
         }
 
         const errors = {};
@@ -132,6 +161,8 @@ const useForm =
       };
 
     /**
+     * @todo
+     * @public
      * @name onBlur
      * @param {import("react").FocusEvent<import("./index").FieldElement>} event
      */
@@ -148,11 +179,13 @@ const useForm =
         if (error) {
           setError(name, error);
         } else {
-          removeError(name);
+          resetErrors([name]);
         }
       };
 
     /**
+     * @todo
+     * @public
      * @name onChange
      * @param {import("react").ChangeEvent<import("./index").FieldElement>} event
      */
@@ -168,12 +201,13 @@ const useForm =
       };
 
     /**
-     * @name getFieldAttributes
+     * @public
+     * @name register
      * @param {string} name
      * @param {Record<string, string>} [attrs]
      * @returns {import("./index").FieldAttributes}
      */
-    const getFieldAttributes =
+    const register =
       (name, attrs = {}) => {
         if (attrs.type === "radio" || attrs.type === "checkbox") {
           if (!attrs.value) {
@@ -189,6 +223,13 @@ const useForm =
           onChange,
           type: attrs.type || "text",
           /**
+           * TODO:
+           * Add possibility to have default value;
+           * Default value is different than initial value.
+           * Default value is the value the input gets
+           * when user clear its content.
+           */
+          /**
            * `attrs.value` must be set for radio, and checkbox.
            * `formState[name].value` may be of type `string[]`
            * only for type radio, and checkbox.
@@ -196,6 +237,38 @@ const useForm =
            * @ts-ignore */
           value: attrs.value || formState[name].value || "",
         };
+      };
+
+    /**
+     * Reset the state of one (or many) form field that
+     * becomes unnecessary.
+     * @public
+     * @name unregister
+     * @param {string|string[]} names
+     * @returns {void}
+     */
+    const unregister =
+      (names) => {
+        if (typeof names == "string") {
+          unregister([names]);
+          return;
+        }
+
+        resetErrors(names);
+
+        resetFieldsValue(names);
+      };
+
+    /**
+     * @todo
+     * @public
+     * @name getFieldValue
+     * @param {string} name
+     * @returns {import("./index").FieldValue}
+     */
+    const getFieldValue =
+      (name) => {
+        return formState[name].value;
       };
 
     /**
@@ -230,6 +303,7 @@ const useForm =
       };
 
     /**
+     * @public
      * @name onSubmit
      * @param {import("./index").RequestSender} send
      * @returns {import("./index").SubmitHandler}
@@ -256,6 +330,22 @@ const useForm =
         return onSubmit_;
       };
 
+    /**
+     * @todo
+     * @public
+     * @name reset
+     */
+    const reset =
+      () => {
+        throw new Error("Not implemented.");
+        // TODO
+        // Maybe resetFields(Object.keys(formState)); same for errors
+      };
+
+    /**
+     * @public
+     * @name debug
+     */
     const debug =
       () => {
         console.log("--- form state");
@@ -266,9 +356,12 @@ const useForm =
     return {
       debug,
       errors: formErrors,
-      getFieldAttributes,
+      register,
+      reset,
+      getFieldValue,
       onSubmit,
       pending,
+      unregister,
     };
   };
 

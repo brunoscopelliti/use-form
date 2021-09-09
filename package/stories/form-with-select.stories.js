@@ -5,7 +5,7 @@ import useForm from "../src";
 import delay from "./fixtures/delay";
 
 const Form = () => {
-  const { debug, errors, getFieldAttributes, pending, onSubmit } = useForm(
+  const { debug, errors, register, pending, onSubmit } = useForm(
     {
       color: {
         label: "Color",
@@ -40,7 +40,7 @@ const Form = () => {
       <div className="form-group">
         <label>
           Colors:
-          <select {...getFieldAttributes("color")}>
+          <select {...register("color")}>
             <option value="">Choose a color</option>
             <option value="blue">Blue</option>
             <option value="black">Black</option>
