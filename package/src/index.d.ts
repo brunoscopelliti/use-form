@@ -2,13 +2,16 @@ import React from "react";
 
 export type FieldElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
 
+export type FieldValue = string | string[];
+
 export type FieldAttributes = {
   checked ?: boolean;
+  multiple ?: boolean;
   name : string;
   onBlur : (event : React.FocusEvent) => void;
   onChange : (event : React.ChangeEvent) => void;
-  type : string;
-  value : string;
+  type ?: string;
+  value : FieldValue;
 };
 
 export type Rule = {
@@ -17,8 +20,6 @@ export type Rule = {
   message ?: string;
   validate ?: () => string | undefined;
 };
-
-export type FieldValue = string | string[];
 
 export type Field = {
   label : string;

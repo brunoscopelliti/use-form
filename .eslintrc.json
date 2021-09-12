@@ -29,5 +29,8 @@
         "testing-library/no-node-access": 0
       }
     }
-  ]
+  ],
+  "globals": {
+    "HTMLSelectElement": true
+  }
 }

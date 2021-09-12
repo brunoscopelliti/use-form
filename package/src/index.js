@@ -228,6 +228,22 @@ const useForm =
       };
 
     /**
+     * @private
+     * @name getSelectMultipleValues
+     * @param {HTMLSelectElement} select
+     * @returns {string[]}
+     */
+    const getSelectMultipleValues =
+      (select) => {
+        const options = select.selectedOptions;
+        const values = [];
+        for (let i = 0; i < options.length; i++) {
+          values.push(options[i].value);
+        }
+        return values;
+      };
+
+    /**
      * @todo
      * @public
      * @name onChange
@@ -244,12 +260,11 @@ const useForm =
         let value = input.value;
 
         if (type === "checkbox") {
-          /**
-           * TODO
-           * <select multiple /> might need something similar (or the same).
-           */
-
           value = toggleValue(name, value);
+        }
+
+        if (input instanceof HTMLSelectElement && input.multiple) {
+          value = getSelectMultipleValues(input);
         }
 
         setFieldValue(name, value);
@@ -283,14 +298,14 @@ const useForm =
           name,
           onBlur,
           onChange,
-          type: attrs.type || "text",
-          /**
-           * `attrs.value` must be set for radio, and checkbox.
-           * `formState[name].value` may be of type `string[]`
-           * only for type radio, and checkbox.
-           * So it's safe to assign value as we do below.
-           * @ts-ignore */
-          value: attrs.value || formState[name].value || "",
+          value:
+            attrs.value ||
+            formState[name].value ||
+            (
+              attrs.multiple
+                ? []
+                : ""
+            ),
         };
       };
 

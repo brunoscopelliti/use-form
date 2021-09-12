@@ -340,7 +340,7 @@ describe("useForm", () => {
 
       expect(section1).toBeInTheDocument();
 
-      const email = section1.querySelector("input[type='email']");
+      const email = section1.querySelector("input[name='email']");
 
       userEvent.type(email, "luffy@strawhat.com");
 
@@ -350,7 +350,7 @@ describe("useForm", () => {
 
       expect(section2).toBeInTheDocument();
 
-      const phone = section2.querySelector("input[type='text']");
+      const phone = section2.querySelector("input[name='phone']");
 
       userEvent.type(phone, "123456");
 
@@ -534,6 +534,236 @@ describe("useForm", () => {
 
       expect(spySubmit).toHaveBeenCalledTimes(1);
       expect(spySubmit).toHaveBeenCalledWith({ sports: ["soccer"] });
+    });
+  });
+
+  describe("select", () => {
+    const SelectForm = (props) => {
+      const colors = ["Blue", "Black", "Green", "Red", "White"];
+
+      const { errors, register, pending, onSubmit } = useForm(
+        {
+          color: {
+            label: "Color",
+            schema: [
+              {
+                id: "required",
+              },
+            ],
+            value: props.value,
+          },
+        }
+      );
+
+      return (
+        <form onSubmit={onSubmit(props.onSubmit)}>
+          <div className="form-group">
+            <label>
+              Colors:
+              <select {...register("color", { multiple: props.multiple })}>
+                <option value="">Choose a color</option>
+                {
+                  colors.map(
+                    (color) => {
+                      return (
+                        <option
+                          key={color}
+                          value={color.toLowerCase()}
+                        >
+                          {color}
+                        </option>
+                      );
+                    }
+                  )
+                }
+              </select>
+            </label>
+            {
+              errors?.color &&
+                <div data-testid="error" className="field-error">{errors.color}</div>
+            }
+          </div>
+          <div className="form-buttons">
+            <button disabled={Boolean(errors || pending)}>
+              Send
+            </button>
+          </div>
+        </form>
+      );
+    };
+
+    SelectForm.propTypes = {
+      multiple: PropTypes.bool,
+      onSubmit: PropTypes.func.isRequired,
+      value: PropTypes.oneOfType([
+        PropTypes.array,
+        PropTypes.string,
+      ]),
+    };
+
+    it("submits single value", async () => {
+      const spySubmit = jest.fn().mockImplementation(() => Promise.resolve());
+
+      render(<SelectForm onSubmit={spySubmit} />);
+
+      const select = screen.getByRole("combobox");
+
+      const options = screen.getAllByRole("option");
+
+      expect(options).toHaveLength(6);
+
+      userEvent.selectOptions(select, ["black"]);
+
+      const submitButton = screen.getByRole("button");
+
+      await act(
+        async () => {
+          userEvent.click(submitButton);
+        }
+      );
+
+      expect(spySubmit).toHaveBeenCalledTimes(1);
+      expect(spySubmit).toHaveBeenCalledWith({ color: "black" });
+      spySubmit.mockClear();
+
+      userEvent.selectOptions(select, ["red"]);
+
+      await act(
+        async () => {
+          userEvent.click(submitButton);
+        }
+      );
+
+      expect(spySubmit).toHaveBeenCalledTimes(1);
+      expect(spySubmit).toHaveBeenCalledWith({ color: "red" });
+      spySubmit.mockClear();
+
+      userEvent.selectOptions(select, [""]);
+
+      await act(
+        async () => {
+          userEvent.click(submitButton);
+        }
+      );
+
+      expect(spySubmit).not.toHaveBeenCalled();
+
+      expect(screen.getByTestId("error"))
+        .toHaveTextContent("Field Color is mandatory.");
+
+      userEvent.selectOptions(select, ["green"]);
+      userEvent.tab();
+
+      await act(
+        async () => {
+          userEvent.click(submitButton);
+        }
+      );
+
+      expect(screen.queryByTestId("error")).not.toBeInTheDocument();
+
+      expect(spySubmit).toHaveBeenCalledTimes(1);
+      expect(spySubmit).toHaveBeenCalledWith({ color: "green" });
+    });
+
+    it("submits default sinlge value", async () => {
+      const spySubmit = jest.fn().mockImplementation(() => Promise.resolve());
+
+      render(<SelectForm onSubmit={spySubmit} value="white" />);
+
+      const submitButton = screen.getByRole("button");
+
+      await act(
+        async () => {
+          userEvent.click(submitButton);
+        }
+      );
+
+      expect(spySubmit).toHaveBeenCalledTimes(1);
+      expect(spySubmit).toHaveBeenCalledWith({ color: "white" });
+    });
+
+    it("submits list of values", async () => {
+      const spySubmit = jest.fn().mockImplementation(() => Promise.resolve());
+
+      render(<SelectForm multiple onSubmit={spySubmit} />);
+
+      const select = screen.getByRole("listbox");
+
+      const options = screen.getAllByRole("option");
+
+      expect(options).toHaveLength(6);
+
+      userEvent.selectOptions(select, ["black", "white"]);
+
+      const submitButton = screen.getByRole("button");
+
+      await act(
+        async () => {
+          userEvent.click(submitButton);
+        }
+      );
+
+      expect(spySubmit).toHaveBeenCalledTimes(1);
+      expect(spySubmit).toHaveBeenCalledWith({ color: ["black", "white"] });
+      spySubmit.mockClear();
+
+      userEvent.deselectOptions(select, ["black", "white"]);
+      userEvent.selectOptions(select, ["red"]);
+
+      await act(
+        async () => {
+          userEvent.click(submitButton);
+        }
+      );
+
+      expect(spySubmit).toHaveBeenCalledTimes(1);
+      expect(spySubmit).toHaveBeenCalledWith({ color: ["red"] });
+      spySubmit.mockClear();
+
+      userEvent.deselectOptions(select, ["red"]);
+
+      await act(
+        async () => {
+          userEvent.click(submitButton);
+        }
+      );
+
+      expect(spySubmit).not.toHaveBeenCalled();
+
+      expect(screen.getByTestId("error"))
+        .toHaveTextContent("Field Color is mandatory.");
+
+      userEvent.selectOptions(select, ["red", "green", "blue"]);
+      userEvent.tab();
+
+      await act(
+        async () => {
+          userEvent.click(submitButton);
+        }
+      );
+
+      expect(screen.queryByTestId("error")).not.toBeInTheDocument();
+
+      expect(spySubmit).toHaveBeenCalledTimes(1);
+      expect(spySubmit).toHaveBeenCalledWith({ color: ["blue", "green", "red"] });
+    });
+
+    it("submits default values", async () => {
+      const spySubmit = jest.fn().mockImplementation(() => Promise.resolve());
+
+      render(<SelectForm multiple onSubmit={spySubmit} value={["blue", "red"]} />);
+
+      const submitButton = screen.getByRole("button");
+
+      await act(
+        async () => {
+          userEvent.click(submitButton);
+        }
+      );
+
+      expect(spySubmit).toHaveBeenCalledTimes(1);
+      expect(spySubmit).toHaveBeenCalledWith({ color: ["blue", "red"] });
     });
   });
 });
