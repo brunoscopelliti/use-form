@@ -133,7 +133,7 @@ describe("useForm", () => {
       error = screen.queryByTestId("username-error");
 
       expect(error).toBeInTheDocument();
-      expect(error).toHaveTextContent("Field Username is mandatory.");
+      expect(error).toHaveTextContent("Field \"Username\" is mandatory.");
 
       expect(spySubmit).not.toHaveBeenCalled();
     });
@@ -164,7 +164,7 @@ describe("useForm", () => {
       const error = screen.getByTestId("username-error");
 
       expect(error).toBeInTheDocument();
-      expect(error).toHaveTextContent("Field Username is mandatory.");
+      expect(error).toHaveTextContent("Field \"Username\" is mandatory.");
 
       const submitButton = screen.getByRole("button");
 
@@ -649,7 +649,7 @@ describe("useForm", () => {
       expect(spySubmit).not.toHaveBeenCalled();
 
       expect(screen.getByTestId("error"))
-        .toHaveTextContent("Field Color is mandatory.");
+        .toHaveTextContent("Field \"Color\" is mandatory.");
 
       userEvent.selectOptions(select, ["green"]);
       userEvent.tab();
@@ -732,7 +732,7 @@ describe("useForm", () => {
       expect(spySubmit).not.toHaveBeenCalled();
 
       expect(screen.getByTestId("error"))
-        .toHaveTextContent("Field Color is mandatory.");
+        .toHaveTextContent("Field \"Color\" is mandatory.");
 
       userEvent.selectOptions(select, ["red", "green", "blue"]);
       userEvent.tab();

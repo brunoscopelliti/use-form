@@ -1,3 +1,9 @@
+import date from "./rules/date";
+import format from "./rules/format";
+import maxlen from "./rules/max-length";
+import minlen from "./rules/min-length";
+import oneof from "./rules/one-of";
+import range from "./rules/range";
 import required from "./rules/required";
 
 export const registerRule =
@@ -16,4 +22,10 @@ export const getRule =
 
 const ValidationRules = new Map();
 
+registerRule("date", date);
+registerRule("format", format);
+registerRule("maxlen", maxlen);
+registerRule("minlen", minlen);
+registerRule("oneof", oneof);
+registerRule("range", range);
 registerRule("required", required);

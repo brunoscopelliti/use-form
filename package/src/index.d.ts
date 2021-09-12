@@ -16,6 +16,7 @@ export type FieldAttributes = {
 
 export type Rule = {
   id : string;
+  attrs ?: Record<string, any>;
   condition ?: (formState : FormPayload) => boolean;
   message ?: string;
   validate ?: () => string | undefined;

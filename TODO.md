@@ -8,16 +8,15 @@
 
       - [x] Form fields might have an initial value
 
-      - [-] Different validations
+      - [x] Different validations
 
-            - [ ] date
-            - [ ] format
-            - [ ] max-length
-            - [ ] min-length
-            - [ ] one-of
-            - [ ] range
-            - [ ] range-date
-            - [ ] required
+            - [x] date
+            - [x] format
+            - [x] max-length
+            - [x] min-length
+            - [x] one-of
+            - [x] range
+            - [x] required
 
             - [x] all the above could be applied condionally,
                   depending on the current state of the form;
