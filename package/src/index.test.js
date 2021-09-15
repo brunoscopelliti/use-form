@@ -183,12 +183,14 @@ describe("useForm", () => {
 
     it.todo("validates field with inline rule");
 
+    it.todo("validates field with no label");
+
     it.todo("reset form");
   });
 
   describe("dynamic form", () => {
     const DynamicForm = (props) => {
-      const { errors, register, getFieldValue, pending, onSubmit, unregister } = useForm(
+      const { errors, register, valueOf, pending, onSubmit, unregister } = useForm(
         {
           type: {
             label: "Login type",
@@ -234,7 +236,7 @@ describe("useForm", () => {
         }
       );
 
-      const currentType = getFieldValue("type");
+      const currentType = valueOf("type");
 
       useEffect(
         () => {

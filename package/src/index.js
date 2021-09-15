@@ -330,13 +330,12 @@ const useForm =
       };
 
     /**
-     * @todo
      * @public
-     * @name getFieldValue
+     * @name valueOf
      * @param {string} name
      * @returns {import("./index").FieldValue}
      */
-    const getFieldValue =
+    const valueOf =
       (name) => {
         return formState[name].value;
       };
@@ -430,7 +429,7 @@ const useForm =
       errors: formErrors,
       register,
       reset,
-      getFieldValue,
+      valueOf,
       onSubmit,
       pending,
       unregister,

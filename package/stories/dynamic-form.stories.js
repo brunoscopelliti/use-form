@@ -5,7 +5,7 @@ import useForm from "../src";
 import delay from "./fixtures/delay";
 
 const Form = () => {
-  const { debug, errors, register, getFieldValue, pending, onSubmit, unregister } = useForm(
+  const { debug, errors, register, valueOf, pending, onSubmit, unregister } = useForm(
     {
       type: {
         label: "Login type",
@@ -53,7 +53,7 @@ const Form = () => {
 
   useEffect(debug);
 
-  const currentType = getFieldValue("type");
+  const currentType = valueOf("type");
 
   useEffect(
     () => {
