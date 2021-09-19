@@ -9,7 +9,7 @@ describe("useForm", () => {
   describe("simple form", () => {
     const SimpleForm =
       (props) => {
-        const { errors, register, pending, onSubmit } = useForm(
+        const { errors, pending, register, onSubmit } = useForm(
           {
             username: {
               label: "Username",
@@ -188,7 +188,7 @@ describe("useForm", () => {
 
       const Form =
         () => {
-          const { errors, register, pending, onSubmit } = useForm(
+          const { errors, pending, register, onSubmit } = useForm(
             {
               username: {
                 label: "Username",
@@ -271,7 +271,82 @@ describe("useForm", () => {
       expect(error).toHaveTextContent("Inline error");
     });
 
-    it.todo("reset form");
+    it("reset form", async () => {
+      const spySubmit = jest.fn().mockImplementation(() => Promise.resolve());
+
+      const Form =
+        () => {
+          const { errors, pending, register, reset, onSubmit } = useForm(
+            {
+              username: {
+                label: "Username",
+                schema: [
+                  {
+                    id: "required",
+                  },
+                ],
+              },
+            }
+          );
+
+          return (
+            <form onSubmit={onSubmit(spySubmit)}>
+              <div className="form-group">
+                <label>
+                  Username:
+                  <input
+                    data-testid="username"
+                    type="text"
+                    {...register("username")}
+                  />
+                </label>
+                {
+                  errors?.username &&
+                    <div data-testid="username-error" className="field-error">{errors.username}</div>
+                }
+              </div>
+              <div className="form-group">
+                <label>
+                  I use this input field only to have something
+                  reliable I can programatically `.focus()`, so that
+                  blur event is triggered on the field under test.
+                  <input type="text" data-testid="focusme" />
+                </label>
+              </div>
+              <div className="form-buttons">
+                <button type="reset" onClick={reset}>
+                  Clean
+                </button>
+                <button disabled={Boolean(errors || pending)}>
+                  Send
+                </button>
+              </div>
+            </form>
+          );
+        };
+
+      render(
+        <Form />
+      );
+
+      const input = screen.getByTestId("username");
+
+      expect(input).toHaveAttribute("value", "");
+
+      userEvent.type(input, "luffy");
+
+      expect(input).toHaveAttribute("value", "luffy");
+
+      const buttons = screen.getAllByRole("button");
+
+      const resetButton = buttons[0];
+
+      expect(resetButton).toHaveAttribute("type", "reset");
+
+      userEvent.click(resetButton);
+
+      expect(input).toHaveAttribute("value", "");
+    });
   });
 
   describe("dynamic form", () => {
@@ -457,7 +532,7 @@ describe("useForm", () => {
 
   describe("checkbox", () => {
     const CheckboxForm = (props) => {
-      const { errors, register, pending, onSubmit } = useForm(
+      const { errors, pending, register, onSubmit } = useForm(
         {
           sports: {
             label: "Sports",
@@ -629,7 +704,7 @@ describe("useForm", () => {
     const SelectForm = (props) => {
       const colors = ["Blue", "Black", "Green", "Red", "White"];
 
-      const { errors, register, pending, onSubmit } = useForm(
+      const { errors, pending, register, onSubmit } = useForm(
         {
           color: {
             label: "Color",

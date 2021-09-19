@@ -109,12 +109,9 @@ const useForm =
               ...nextState,
               [name]: {
                 ...nextState[name],
-                /**
-                 * TODO:
-                 * This might need to change to better accomodate
-                 * checkbox (cause those can have more than one value).
-                 */
-                value: "",
+                value: Array.isArray(nextState[name].value)
+                  ? []
+                  : "",
               },
             };
           }
@@ -238,7 +235,10 @@ const useForm =
         const options = select.selectedOptions;
         const values = [];
         for (let i = 0; i < options.length; i++) {
-          values.push(options[i].value);
+          const value = options[i].value;
+          if (value) {
+            values.push(value);
+          }
         }
         return values;
       };
@@ -401,15 +401,18 @@ const useForm =
       };
 
     /**
-     * @todo
+     * Reset the value of all fields,
+     * and remove validation errors.
      * @public
      * @name reset
      */
     const reset =
       () => {
-        throw new Error("Not implemented.");
-        // TODO
-        // Maybe resetFields(Object.keys(formState)); same for errors
+        resetFieldsValue(
+          Object.keys(formState)
+        );
+
+        setFormErrors(null);
       };
 
     /**

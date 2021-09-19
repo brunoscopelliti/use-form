@@ -8,7 +8,7 @@ import delay from "./fixtures/delay";
 const Form = (props) => {
   const colors = ["Blue", "Black", "Green", "Red", "White"];
 
-  const { debug, errors, register, pending, onSubmit } = useForm(
+  const { debug, errors, pending, register, reset, onSubmit } = useForm(
     {
       color: {
         label: "Color",
@@ -67,6 +67,9 @@ const Form = (props) => {
         }
       </div>
       <div className="form-buttons">
+      <button type="reset" onClick={reset}>
+          Clean
+        </button>
         <button disabled={errors || pending}>
           Send
         </button>

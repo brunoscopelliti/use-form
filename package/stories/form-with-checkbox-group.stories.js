@@ -5,7 +5,7 @@ import useForm from "../src";
 import delay from "./fixtures/delay";
 
 const Form = () => {
-  const { debug, errors, register, pending, onSubmit } = useForm(
+  const { debug, errors, pending, register, reset, onSubmit } = useForm(
     {
       sports: {
         label: "Sports",
@@ -61,6 +61,9 @@ const Form = () => {
         }
       </div>
       <div className="form-buttons">
+        <button type="reset" onClick={reset}>
+          Clean
+        </button>
         <button disabled={errors || pending}>
           Send
         </button>

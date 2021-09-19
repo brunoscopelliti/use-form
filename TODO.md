@@ -30,6 +30,6 @@
 
 * [ ] Same field name can be either readonly input or select.
 
-* [ ] Reset button
+* [x] Reset button
 
 
