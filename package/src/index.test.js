@@ -181,9 +181,95 @@ describe("useForm", () => {
       expect(submitButton).not.toHaveAttribute("disabled", "");
     });
 
-    it.todo("validates field with inline rule");
+    it("validates field with inline rule", async () => {
+      const spySubmit = jest.fn().mockImplementation(() => Promise.resolve());
 
-    it.todo("validates field with no label");
+      const spyValidate = jest.fn().mockImplementation(() => "Inline error");
+
+      const Form =
+        () => {
+          const { errors, register, pending, onSubmit } = useForm(
+            {
+              username: {
+                label: "Username",
+                schema: [
+                  {
+                    id: "inline",
+                    validate: spyValidate,
+                  },
+                ],
+              },
+            }
+          );
+
+          return (
+            <form onSubmit={onSubmit(spySubmit)}>
+              <div className="form-group">
+                <label>
+                  Username:
+                  <input
+                    data-testid="username"
+                    type="text"
+                    {...register("username")}
+                  />
+                </label>
+                {
+                  errors?.username &&
+                    <div data-testid="username-error" className="field-error">{errors.username}</div>
+                }
+              </div>
+              <div className="form-group">
+                <label>
+                  I use this input field only to have something
+                  reliable I can programatically `.focus()`, so that
+                  blur event is triggered on the field under test.
+                  <input type="text" data-testid="focusme" />
+                </label>
+              </div>
+              <div className="form-buttons">
+                <button disabled={Boolean(errors || pending)}>
+                  Send
+                </button>
+              </div>
+            </form>
+          );
+        };
+
+      render(
+        <Form />
+      );
+
+      const input = screen.getByTestId("username");
+
+      expect(input).toHaveAttribute("value", "");
+
+      userEvent.type(input, "luffy");
+
+      expect(input).toHaveAttribute("value", "luffy");
+
+      const otherInput = screen.getByTestId("focusme");
+
+      otherInput.focus();
+
+      expect(spyValidate).toHaveBeenCalledTimes(1);
+      expect(spyValidate).toHaveBeenCalledWith(
+        "username",
+        "Username",
+        "luffy",
+        {
+          id: "inline",
+          validate: expect.anything(),
+        },
+        {
+          username: "luffy",
+        }
+      );
+
+      const error = screen.getByTestId("username-error");
+
+      expect(error).toBeInTheDocument();
+      expect(error).toHaveTextContent("Inline error");
+    });
 
     it.todo("reset form");
   });

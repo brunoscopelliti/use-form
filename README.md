@@ -100,11 +100,11 @@ useForm(formConfig);
 
 Each field may have following configuration properties:
 
-* `label` ([string]) : it's used to reference the field in validation error message.
+* `label` (`string`) : it's used to reference the field in validation error message.
 
-* `schema` ([Rule[]]) : it specifies the rules the field value must respect - more on this subject later.
+* `schema` (`[Rule[]]`) : it specifies the rules the field value must respect - more on this subject later.
 
-* `value` ([string|string[]]) : it specifies the initial value of the field - it can be a list of values to accomodate for the possibility of checkbox, and select to have multiple value selected at the same time.
+* `value` (`[string|string[]]`) : it specifies the initial value of the field - it can be a list of values to accomodate for the possibility of checkbox, and select to have multiple value selected at the same time.
 
 #### Validation schema
 
@@ -177,7 +177,7 @@ useForm(
 
 `useForm` returns an object with the following properties:
 
-* `label` (`() => void`) : print the state of the form.
+* `debug` (`() => void`) : print the state of the form.
 
 * `errors` (`null | Record<keyof FormConfig, string>`) : contains validation error for each field in the form; it's `null` if the form is valid (or validation didn't run yet).
 
