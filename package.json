@@ -1,7 +1,7 @@
 {
   "name": "@bscop/use-form",
   "version": "1.0.0",
-  "description": "A template to create a new React component.",
+  "description": "A custom React hook handle form.",
   "main": "package/dist/index.js",
   "module": "package/dist/index.es.js",
   "types": "package/src/index.d.ts",
