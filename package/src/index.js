@@ -86,7 +86,6 @@ const useForm =
       };
 
     /**
-     * @todo Complete implementation.
      * @private
      * @name resetFieldsValue
      * @param {string[]} names
@@ -132,9 +131,7 @@ const useForm =
     const setError =
       (name, error) => {
         setFormErrors(
-          formErrors == null
-            ? { [name]: error }
-            : { ...formErrors, [name]: error }
+          { ...formErrors, [name]: error }
         );
       };
 
@@ -174,7 +171,6 @@ const useForm =
       };
 
     /**
-     * @todo
      * @public
      * @name onBlur
      * @param {import("react").FocusEvent<import("./index").FieldElement>} event
@@ -244,7 +240,6 @@ const useForm =
       };
 
     /**
-     * @todo
      * @public
      * @name onChange
      * @param {import("react").ChangeEvent<import("./index").FieldElement>} event
