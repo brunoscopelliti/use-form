@@ -177,15 +177,7 @@ const useForm =
      */
     const onBlur =
       (event) => {
-        const name = event.target.name;
-
-        const error = validate(name, formState[name], serialize(formState));
-
-        if (error) {
-          setError(name, error);
-        } else {
-          resetErrors([name]);
-        }
+        validateField(event.target.name);
       };
 
     /**
@@ -337,10 +329,21 @@ const useForm =
 
     /**
      * @private
-     * @name validateForm
-     * @params {import("./index").FormPayload} payload
-     * @returns {boolean}
+     * @name validateField
+     * @params {string} name
+     * @returns {void}
      */
+    const validateField =
+      (name) => {
+        const error = validate(name, formState[name], serialize(formState));
+
+        if (error) {
+          setError(name, error);
+        } else {
+          resetErrors([name]);
+        }
+      };
+
     const validateForm =
       (payload) => {
         let isValid = true;
@@ -399,9 +402,9 @@ const useForm =
      * Reset the value of all fields,
      * and remove validation errors.
      * @public
-     * @name reset
+     * @name resetForm
      */
-    const reset =
+    const resetForm =
       () => {
         resetFieldsValue(
           Object.keys(formState)
@@ -426,7 +429,7 @@ const useForm =
       debug,
       errors: formErrors,
       register,
-      reset,
+      resetForm,
       valueOf,
       onSubmit,
       pending,

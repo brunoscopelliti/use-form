@@ -43,7 +43,7 @@ export type HookResult = {
   pending : boolean;
   onSubmit : (send : RequestSender) => SubmitHandler;
   register : (name : string, attrs ?: Record<string, string>) => FieldAttributes;
-  reset : () => void;
+  resetForm : () => void;
   unregister : (name : string | string[]) => void;
 };
 

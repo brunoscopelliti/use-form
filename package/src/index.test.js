@@ -276,7 +276,7 @@ describe("useForm", () => {
 
       const Form =
         () => {
-          const { errors, pending, register, reset, onSubmit } = useForm(
+          const { errors, pending, register, resetForm, onSubmit } = useForm(
             {
               username: {
                 label: "Username",
@@ -314,7 +314,7 @@ describe("useForm", () => {
                 </label>
               </div>
               <div className="form-buttons">
-                <button type="reset" onClick={reset}>
+                <button type="reset" onClick={resetForm}>
                   Clean
                 </button>
                 <button disabled={Boolean(errors || pending)}>

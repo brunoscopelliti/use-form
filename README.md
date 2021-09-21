@@ -67,7 +67,7 @@ const {
   pending,
   onSubmit,
   register,
-  reset,
+  resetForm,
   unregister,
   valueOf,
 } : HookResult = useForm(config: FormConfig);
@@ -213,7 +213,7 @@ function App () {
 }
 ```
 
-* `reset` (`() => void`) : reset the value of all the fields.
+* `resetForm` (`() => void`) : reset the value of all the fields.
 
 * `unregister` (`(name : string) => void`) : reset the state of one (or many) form field that becomes unnecessary.
 
