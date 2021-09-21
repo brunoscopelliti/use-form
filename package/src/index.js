@@ -70,26 +70,28 @@ const useForm =
      * @name setFieldValue
      * @param {string} name
      * @param {import("./index").FieldValue} value
-     * @return {void}
+     * @return {import("./index").FormConfig}
      */
     const setFieldValue =
       (name, value) => {
-        setFormState(
-          {
-            ...formState,
-            [name]: {
-              ...formState[name],
-              value: value,
-            },
-          }
-        );
+        const nextState = {
+          ...formState,
+          [name]: {
+            ...formState[name],
+            value: value,
+          },
+        };
+
+        setFormState(nextState);
+
+        return nextState;
       };
 
     /**
      * @private
      * @name resetFieldsValue
      * @param {string[]} names
-     * @returns {void}
+     * @returns {import("./index").FormConfig}
      */
     const resetFieldsValue =
       (names) => {
@@ -117,6 +119,8 @@ const useForm =
         }
 
         setFormState(nextState);
+
+        return nextState;
       };
 
     const [formErrors, setFormErrors] = useState(null);
@@ -149,6 +153,7 @@ const useForm =
           return;
         }
 
+        let isValid = true;
         const errors = {};
         for (const k in formErrors) {
           /* istanbul ignore else */
@@ -158,10 +163,9 @@ const useForm =
             }
 
             errors[k] = formErrors[k];
+            isValid = false;
           }
         }
-
-        const isValid = Object.keys(errors).length === 0;
 
         setFormErrors(
           isValid === false
@@ -171,13 +175,33 @@ const useForm =
       };
 
     /**
+     * @private
+     * @name toggleError
+     * @params {string} name
+     * @params {string|undefined} error
+     * @returns {void}
+     */
+    const toggleError =
+     (name, error) => {
+       if (error) {
+         setError(name, error);
+       } else {
+         resetErrors([name]);
+       }
+     };
+
+    /**
      * @public
      * @name onBlur
      * @param {import("react").FocusEvent<import("./index").FieldElement>} event
      */
     const onBlur =
       (event) => {
-        validateField(event.target.name);
+        const name = event.target.name;
+
+        const error = validate(name, formState[name], serialize(formState));
+
+        toggleError(name, error);
       };
 
     /**
@@ -328,22 +352,32 @@ const useForm =
       };
 
     /**
-     * @private
-     * @name validateField
-     * @params {string} name
-     * @returns {void}
+     * @public
+     * @name forceValue
+     * @param {string} name
+     * @param {import("./index").FieldValue} value
      */
-    const validateField =
-      (name) => {
-        const error = validate(name, formState[name], serialize(formState));
+    const forceValue =
+      (name, value) => {
+        const nextState = setFieldValue(name, value);
 
-        if (error) {
-          setError(name, error);
-        } else {
+        const error = validate(name, nextState[name], serialize(nextState));
+
+        /**
+         * When next state for the field is valid,
+         * we remove the error immediately.
+         */
+        if (error == null) {
           resetErrors([name]);
         }
       };
 
+    /**
+     * @private
+     * @name validateForm
+     * @param {import("./index").FormPayload} payload
+     * @returns {boolean}
+     */
     const validateForm =
       (payload) => {
         let isValid = true;
@@ -428,6 +462,7 @@ const useForm =
     return {
       debug,
       errors: formErrors,
+      forceValue,
       register,
       resetForm,
       valueOf,

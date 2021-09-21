@@ -64,6 +64,7 @@ function App () {
 const {
   debug,
   errors,
+  forceValue,
   pending,
   onSubmit,
   register,
@@ -180,6 +181,8 @@ useForm(
 * `debug` (`() => void`) : print the state of the form.
 
 * `errors` (`null | Record<keyof FormConfig, string>`) : contains validation error for each field in the form; it's `null` if the form is valid (or validation didn't run yet).
+
+* `forceValue` (`(name : string, value : string|string[]) => void`) : programatically set the value of a field, and trigger validation.
 
 * `valueOf` (`(name : string) => string|string[]`) : return the value of a given field; for checkbox, and select[multiple] it returns a list of values.
 

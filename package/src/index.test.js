@@ -530,6 +530,131 @@ describe("useForm", () => {
     });
   });
 
+  describe("dynamic form / 2", () => {
+    const OPTIONS = ["Black", "Blue", "Green", "Red", "White"];
+
+    const DynamicForm = (props) => {
+      const options = props.options;
+
+      const { errors, forceValue, pending, register, onSubmit } = useForm(
+        {
+          color: {
+            label: "Color",
+            schema: [
+              {
+                id: "required",
+              },
+            ],
+            value: options.length === 1
+              ? options[0]
+              : "",
+          },
+        }
+      );
+
+      useEffect(
+        () => {
+          if (options.length === 1) {
+            forceValue("color", options[0]);
+          } else {
+            forceValue("color", "");
+          }
+        },
+        [options] // eslint-disable-line react-hooks/exhaustive-deps
+      );
+
+      return (
+        <form onSubmit={onSubmit(props.onSubmit)}>
+          <div className="form-group">
+            <label>
+              Colors:
+              {
+                options.length === 1
+                  ? (
+                    <input {...register("color", { readOnly: "", value: options[0] })} />
+                    )
+                  : (
+                      <select {...register("color")}>
+                        <option value="">Choose a color</option>
+                        {
+                          options.map(
+                            (color) => {
+                              return (
+                                <option
+                                  key={color}
+                                  value={color}
+                                >
+                                  {color}
+                                </option>
+                              );
+                            }
+                          )
+                        }
+                      </select>
+                    )
+              }
+            </label>
+            {
+              errors?.color &&
+                <div className="field-error">{errors.color}</div>
+            }
+          </div>
+          <div className="form-buttons">
+            <button disabled={Boolean(errors || pending)}>
+              Send
+            </button>
+          </div>
+        </form>
+      );
+    };
+
+    DynamicForm.propTypes = {
+      onSubmit: PropTypes.func.isRequired,
+      options: PropTypes.arrayOf(PropTypes.string).isRequired,
+    };
+
+    it("controls field that changes tag", async () => {
+      const spySubmit = jest.fn().mockImplementation(() => Promise.resolve());
+
+      const { rerender } = render(
+        <DynamicForm onSubmit={spySubmit} options={OPTIONS} />
+      );
+
+      const select = screen.getByRole("combobox");
+
+      const options = screen.getAllByRole("option");
+
+      expect(options).toHaveLength(6);
+
+      userEvent.selectOptions(select, ["Red"]);
+
+      const submitButton = screen.getByRole("button");
+
+      await act(
+        async () => {
+          userEvent.click(submitButton);
+        }
+      );
+
+      expect(spySubmit).toHaveBeenCalledTimes(1);
+      expect(spySubmit).toHaveBeenCalledWith({ color: "Red" });
+      spySubmit.mockClear();
+
+      rerender(
+        <DynamicForm onSubmit={spySubmit} options={OPTIONS.slice(0, 1)} />
+      );
+
+      await act(
+        async () => {
+          userEvent.click(submitButton);
+        }
+      );
+
+      expect(spySubmit).toHaveBeenCalledTimes(1);
+      expect(spySubmit).toHaveBeenCalledWith({ color: "Black" });
+    });
+  });
+
   describe("checkbox", () => {
     const CheckboxForm = (props) => {
       const { errors, pending, register, onSubmit } = useForm(
