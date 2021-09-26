@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.1](https://github.com/brunoscopelliti/@bscop/use-form/compare/v1.0.0...v1.0.1) (2021-09-26)
+
+
+### Bug Fixes
+
+* runtime exception when field schema is not defined ([a9b4872](https://github.com/brunoscopelliti/@bscop/use-form/commits/a9b487263a690391bb71177ae68e90530c5c7c30))
+
 ## 1.0.0 (2021-09-21)
 
 
