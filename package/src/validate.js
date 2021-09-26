@@ -9,6 +9,10 @@ import { getRule } from "./rules";
  */
 const validate =
   (name, field, formState) => {
+    if (field.schema == null) {
+      return;
+    }
+
     for (const rule of field.schema) {
       /**
        * It's possible to define

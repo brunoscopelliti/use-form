@@ -24,7 +24,7 @@ export type Rule = {
 
 export type Field = {
   label : string;
-  schema : Rule[];
+  schema ?: Rule[];
   value ?: FieldValue;
 };
 
