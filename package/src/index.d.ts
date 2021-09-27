@@ -23,6 +23,7 @@ export type Rule = {
 };
 
 export type Field = {
+  defaultValue ?: string;
   label : string;
   schema ?: Rule[];
   value ?: FieldValue;

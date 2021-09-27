@@ -56,6 +56,34 @@ const logFormat =
   };
 
 /**
+ * @name makeInitialState
+ * @param {import("./index").FormConfig} formConfig
+ * @returns import("./index").FormConfig
+ */
+const makeInitialState =
+  (formConfig) => {
+    const formState = {};
+
+    for (const k in formConfig) {
+      /* istanbul ignore else */
+      if (hasOwn.call(formConfig, k)) {
+        const fieldConfig = formConfig[k];
+
+        if (fieldConfig.defaultValue) {
+          formState[k] = {
+            ...fieldConfig,
+            value: fieldConfig.defaultValue,
+          };
+        } else {
+          formState[k] = fieldConfig;
+        }
+      }
+    }
+
+    return formState;
+  };
+
+/**
  * @name useForm
  * @param {import("./index").FormConfig} formConfig
  */
@@ -63,7 +91,9 @@ const useForm =
   (formConfig) => {
     const [pending, reqStart, reqEnd] = useBool();
 
-    const [formState, setFormState] = useState(formConfig);
+    const [formState, setFormState] = useState(
+      makeInitialState(formConfig)
+    );
 
     /**
      * @private
@@ -110,9 +140,10 @@ const useForm =
               ...nextState,
               [name]: {
                 ...nextState[name],
-                value: Array.isArray(nextState[name].value)
-                  ? []
-                  : "",
+                value: formState[name].defaultValue ||
+                  (Array.isArray(nextState[name].value)
+                    ? []
+                    : ""),
               },
             };
           }

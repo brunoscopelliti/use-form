@@ -347,6 +347,88 @@ describe("useForm", () => {
 
       expect(input).toHaveAttribute("value", "");
     });
+
+    it("reset form to default value", async () => {
+      const spySubmit = jest.fn().mockImplementation(() => Promise.resolve());
+
+      const Form =
+        () => {
+          const { errors, pending, register, resetForm, onSubmit } = useForm(
+            {
+              username: {
+                defaultValue: "luffy",
+                label: "Username",
+                schema: [
+                  {
+                    id: "required",
+                  },
+                ],
+              },
+            }
+          );
+
+          return (
+            <form onSubmit={onSubmit(spySubmit)}>
+              <div className="form-group">
+                <label>
+                  Username:
+                  <input
+                    data-testid="username"
+                    type="text"
+                    {...register("username")}
+                  />
+                </label>
+                {
+                  errors?.username &&
+                    <div data-testid="username-error" className="field-error">{errors.username}</div>
+                }
+              </div>
+              <div className="form-group">
+                <label>
+                  I use this input field only to have something
+                  reliable I can programatically `.focus()`, so that
+                  blur event is triggered on the field under test.
+                  <input type="text" data-testid="focusme" />
+                </label>
+              </div>
+              <div className="form-buttons">
+                <button type="reset" onClick={resetForm}>
+                  Clean
+                </button>
+                <button disabled={Boolean(errors || pending)}>
+                  Send
+                </button>
+              </div>
+            </form>
+          );
+        };
+
+      render(
+        <Form />
+      );
+
+      const input = screen.getByTestId("username");
+
+      expect(input).toHaveAttribute("value", "luffy");
+
+      userEvent.clear(input);
+
+      expect(input).toHaveAttribute("value", "");
+
+      userEvent.type(input, "zoro");
+
+      expect(input).toHaveAttribute("value", "zoro");
+
+      const buttons = screen.getAllByRole("button");
+
+      const resetButton = buttons[0];
+
+      expect(resetButton).toHaveAttribute("type", "reset");
+
+      userEvent.click(resetButton);
+
+      expect(input).toHaveAttribute("value", "luffy");
+    });
   });
 
   describe("dynamic form", () => {

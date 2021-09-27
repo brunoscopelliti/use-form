@@ -101,6 +101,8 @@ useForm(formConfig);
 
 Each field may have following configuration properties:
 
+* `defaultValue` (`[string]`) : it's used as initial value, and after the form is reset, or the field in unregistered.
+
 * `label` (`string`) : it's used to reference the field in validation error message.
 
 * `schema` (`[Rule[]]`) : it specifies the rules the field value must respect - more on this subject later.
