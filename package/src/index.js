@@ -438,11 +438,12 @@ const useForm =
     /**
      * @public
      * @name onSubmit
-     * @param {import("./index").RequestSender} send
+     * @param {import("./index").RequestSender<any>} send
+     * @param {boolean} [skipCleanup]
      * @returns {import("./index").SubmitHandler}
      */
     const onSubmit =
-      (send) => {
+      (send, skipCleanup = false) => {
         const onSubmit_ =
           (event) => {
             event.preventDefault();
@@ -457,7 +458,23 @@ const useForm =
 
             reqStart();
 
-            send(payload).finally(reqEnd);
+            send(payload).finally(
+              () => {
+                /**
+                 * Sometimes after the form is submitted,
+                 * the component containing the form gets unmounted.
+                 * In such case it is not needed to reset the "pending" state,
+                 * cause it wouldn't be used in the UI anymore -
+                 * also doing so would cause the warning about calling `setState`
+                 * on an unmounted component.
+                 * In such case, pass `skipCleanup = true` to skip
+                 * reset of state.
+                 */
+                if (skipCleanup === false) {
+                  reqEnd();
+                }
+              }
+            );
           };
 
         return onSubmit_;

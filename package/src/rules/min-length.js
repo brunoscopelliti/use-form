@@ -10,7 +10,7 @@ import makeRule from "./rule";
  */
 const minLength =
   (_, label, value, rule) => {
-    if (value.length < rule.attrs.size) {
+    if (value?.length < rule.attrs.size) {
       return `Field "${label}" exceeds min length of ${rule.attrs.size} characters.`;
     }
   };

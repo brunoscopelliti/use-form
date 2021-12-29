@@ -33,22 +33,22 @@ export type FormConfig = Record<string, Field>;
 
 export type FormPayload = Record<keyof FormConfig, FieldValue>;
 
-export type RequestSender = (payload : FormPayload) => Promise<unknown>;
+export type RequestSender <T> = (payload : T) => Promise<unknown>;
 
 export type SubmitHandler = (event : React.FormEvent) => void;
 
-export type HookResult = {
+export type HookResult <T> = {
   debug : () => void;
-  errors : null | Record<keyof FormConfig, string>;
+  errors : null | Record<keyof T, string>;
   forceValue : (name : string, value : FieldValue) => void;
   pending : boolean;
-  onSubmit : (send : RequestSender) => SubmitHandler;
+  onSubmit : (send : RequestSender<T>, skipCleanup ?: boolean) => SubmitHandler;
   register : (name : string, attrs ?: Record<string, string>) => FieldAttributes;
   resetForm : () => void;
   unregister : (name : string | string[]) => void;
   valueOf : (name : string) => FieldValue;
 };
 
-declare const useForm : (formConfig : FormConfig) => HookResult;
+declare const useForm : <T> (formConfig : FormConfig) => HookResult<T>;
 
 export default useForm;
