@@ -10,9 +10,6 @@ const Form = () => {
       username: {
         label: "Username",
         schema: [
-          {
-            id: "required",
-          },
         ],
       },
     }

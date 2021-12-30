@@ -21,11 +21,13 @@ const serialize =
       /* istanbul ignore else */
       if (hasOwn.call(formState, k)) {
         /**
-         * We include in the payload only
-         * the fields which contain a not empty value.
+         * We include all the not-nullish values -
+         * including "", empty string.
+         * This is because it should be possible to
+         * reset to empty the value of a given input.
          */
         const value = formState[k].value;
-        if (value?.length > 0) {
+        if (value != null) {
           serializedState[k] = value;
         }
       }
@@ -131,22 +133,13 @@ const useForm =
         let nextState = { ...formState };
 
         for (const name of names) {
-          /**
-           * It makes sense to reset only
-           * fields that contains an actual value.
-           */
-          if (nextState[name].value) {
-            nextState = {
-              ...nextState,
-              [name]: {
-                ...nextState[name],
-                value: formState[name].defaultValue ||
-                  (Array.isArray(nextState[name].value)
-                    ? []
-                    : ""),
-              },
-            };
-          }
+          nextState = {
+            ...nextState,
+            [name]: {
+              ...nextState[name],
+              value: formState[name].defaultValue,
+            },
+          };
         }
 
         setFormState(nextState);

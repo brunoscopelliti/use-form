@@ -50,7 +50,7 @@ const Form = () => {
     <div>
       <p className="comment">
         The input changes type depending on the number of options.
-        It is rendered as readonly field when there iss only one option, otherwise is rendered as select.
+        It is rendered as readonly field when there is only one option, otherwise is rendered as select.
         Press the button below to change how the field is rendered.
       </p>
       <p>
@@ -78,7 +78,7 @@ const Form = () => {
             {
               options.length === 1
                 ? (
-                  <input {...register("color", { readOnly: "", value: options[0] })} />
+                  <input {...register("color", { value: options[0] })} readOnly />
                   )
                 : (
                     <select {...register("color")}>
