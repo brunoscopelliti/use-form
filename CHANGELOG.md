@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/brunoscopelliti/@bscop/use-form/compare/v1.1.1...v2.0.0) (2021-12-30)
+
+
+### ⚠ BREAKING CHANGES
+
+* previously empty string value were omitted from payload;
+this was unfortunate, cause it made impossible to reset the value of an input.
+* when a field gets unregister its value is reset to its
+default value (if any) or `undefined` - previously it was empty string, or
+empty array depending on the input type.
+
+### Bug Fixes
+
+* payload includes also empty string ([e2789c2](https://github.com/brunoscopelliti/@bscop/use-form/commits/e2789c20aa835bba6a6f5cf323d377334460efa0))
+
 ### [1.1.1](https://github.com/brunoscopelliti/@bscop/use-form/compare/v1.1.0...v1.1.1) (2021-12-29)
 
 
