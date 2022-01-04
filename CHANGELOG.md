@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.1](https://github.com/brunoscopelliti/@bscop/use-form/compare/v2.0.0...v2.0.1) (2022-01-04)
+
+
+### Bug Fixes
+
+* fix type for custom validate Rule ([e73f575](https://github.com/brunoscopelliti/@bscop/use-form/commits/e73f57532997b142a83c22da6fd4504c0a2da084))
+
 ## [2.0.0](https://github.com/brunoscopelliti/@bscop/use-form/compare/v1.1.1...v2.0.0) (2021-12-30)
 
 
