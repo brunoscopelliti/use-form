@@ -19,7 +19,7 @@ export type Rule = {
   attrs ?: Record<string, any>;
   condition ?: (formState : FormPayload) => boolean;
   message ?: string;
-  validate ?: () => string | undefined;
+  validate ?: (name : string, label : string, value : FieldValue, rule : Rule, formState : unknown) => string | undefined;
 };
 
 export type Field = {
