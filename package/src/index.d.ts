@@ -40,7 +40,7 @@ export type SubmitHandler = (event : React.FormEvent) => void;
 export type HookResult <T> = {
   debug : () => void;
   errors : null | Record<keyof T, string>;
-  forceValue : (name : string, value : FieldValue) => void;
+  forceValue : (name : string, value : FieldValue, shouldValidate ?: boolean) => void;
   pending : boolean;
   onSubmit : (send : RequestSender<T>, skipCleanup ?: boolean) => SubmitHandler;
   register : (name : string, attrs ?: Record<string, string>) => FieldAttributes;

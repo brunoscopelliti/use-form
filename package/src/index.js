@@ -380,18 +380,21 @@ const useForm =
      * @name forceValue
      * @param {string} name
      * @param {import("./index").FieldValue} value
+     * @param {boolean} shouldValidate
      */
     const forceValue =
-      (name, value) => {
+      (name, value, shouldValidate = false) => {
         const nextState = setFieldValue(name, value);
 
         const error = validate(name, nextState[name], serialize(nextState));
 
-        /**
-         * When next state for the field is valid,
-         * we remove the error immediately.
-         */
-        if (error == null) {
+        if (shouldValidate) {
+          toggleError(name, error);
+        } else if (error == null) {
+          /**
+           * When next state for the field is valid,
+           * we remove the error immediately.
+           */
           resetErrors([name]);
         }
       };

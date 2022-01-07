@@ -184,7 +184,7 @@ useForm(
 
 * `errors` (`null | Record<keyof FormConfig, string>`) : contains validation error for each field in the form; it's `null` if the form is valid (or validation didn't run yet).
 
-* `forceValue` (`(name : string, value : string|string[]) => void`) : programatically set the value of a field, and trigger validation.
+* `forceValue` (`(name : string, value : string|string[]) => void, shouldValidate ?: boolean`) : programatically set the value of a field, and trigger validation.
 
 * `valueOf` (`(name : string) => string|string[]`) : return the value of a given field; for checkbox, and select[multiple] it returns a list of values.
 
