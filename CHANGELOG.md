@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/brunoscopelliti/@bscop/use-form/compare/v2.0.1...v2.1.0) (2022-01-07)
+
+
+### Features
+
+* add optional parameter 'shouldValidate' to forceValue ([fed5300](https://github.com/brunoscopelliti/@bscop/use-form/commits/fed5300ba1a0283cf1d8ea755a33c2be9904e22c))
+
 ### [2.0.1](https://github.com/brunoscopelliti/@bscop/use-form/compare/v2.0.0...v2.0.1) (2022-01-04)
 
 
